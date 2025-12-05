@@ -1,4 +1,4 @@
-# Subnets module - Public Tier (Fixed Addresses)
+# Subnets module - Public
 ###########################################
 
 resource "aws_subnet" "public_a" {
@@ -42,7 +42,7 @@ resource "aws_subnet" "public_c" {
 }
 
 
-# Subnets module - Private Tier (Fixed Addresses)
+# Subnets module - Private
 ###########################################
 
 resource "aws_subnet" "private_a" {
@@ -85,7 +85,7 @@ resource "aws_subnet" "private_c" {
 }
 
 
-# Subnets module - Nonroutable Tier (Fixed Addresses)
+# Subnets module - Nonroutable
 ###########################################
 
 resource "aws_subnet" "nonroutable_a" {
