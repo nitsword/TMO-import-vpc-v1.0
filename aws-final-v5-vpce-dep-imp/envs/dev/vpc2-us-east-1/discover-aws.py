@@ -22,7 +22,6 @@ TF_ADDRESSES = {
 
 
 def get_tag_value(tags, key):
-    """Helper function to extract tag value."""
     for tag in tags:
         if tag.get('Key') == key:
             return tag.get('Value')
@@ -33,7 +32,7 @@ def discover_vpc_resources(vpc_identifier):
     resources_for_import = []
     is_vpc_id = vpc_identifier.lower().startswith('vpc-')
     
-    print(f"-> Searching for VPC using identifier: {vpc_identifier} (Type: {'ID' if is_vpc_id else 'Name Tag'})")
+    print(f"Searching for VPC using identifier: {vpc_identifier} (Type: {'ID' if is_vpc_id else 'Name Tag'})")
     
     try:
         if is_vpc_id:
@@ -264,4 +263,4 @@ if __name__ == "__main__":
         print("The file 'resources_for_import.json' has been updated.")
     else:
         print("\n--- DISCOVERY FAILED ---")
-        print("No resources were discovered. Please check the VPC ID/Name and AWS connectivity.")
+        print("No resources were discovered.check the VPC ID/Name and AWS connectivity.")
