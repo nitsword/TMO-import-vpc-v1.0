@@ -4,7 +4,7 @@ import re
 import sys
 
 
-HCL_ADDRESSES = {
+TF_ADDRESSES = {
     
     "VPC": "module.vpc.aws_vpc.this",
     "IGW": "module.vpc.aws_internet_gateway.this",
@@ -42,27 +42,26 @@ def discover_vpc_resources(vpc_identifier):
             response = client.describe_vpcs(
                 Filters=[{'Name': 'tag:Name', 'Values': [vpc_identifier]}]
             )
-        
         vpcs = response.get('Vpcs', [])
     except Exception as e:
         print(f"Error during VPC search: {e}")
         return []
 
     if not vpcs:
-        print("ERROR: VPC not found. Check the identifier or AWS region/connectivity.")
+        print("ERROR: VPC not found. plz check AWS region/connection.")
         return []
 
     vpc = vpcs[0]
     vpc_id = vpc['VpcId']
     vpc_name = get_tag_value(vpc.get('Tags', []), 'Name') or vpc_id
     
-    print(f"-> Found VPC ID: {vpc_id} (Name: {vpc_name}). Discovering dependencies...")
+    print(f"-> Found VPC ID: {vpc_id} (Name: {vpc_name})")
     
    
     resources_for_import.append({
         "type": "aws_vpc",
         "aws_id": vpc_id,
-        "terraform_address": HCL_ADDRESSES["VPC"],
+        "terraform_address": TF_ADDRESSES["VPC"],
         "metadata": {"Name": vpc_name, "VpcId": vpc_id}
     })
 
@@ -73,7 +72,7 @@ def discover_vpc_resources(vpc_identifier):
         resources_for_import.append({
             "type": "aws_internet_gateway",
             "aws_id": igw_id,
-            "terraform_address": HCL_ADDRESSES["IGW"],
+            "terraform_address": TF_ADDRESSES["IGW"],
             "metadata": {"VpcId": vpc_id}
         })
 
@@ -100,7 +99,7 @@ def discover_vpc_resources(vpc_identifier):
         
         az_key = az[-1:]
         
-        tf_address = HCL_ADDRESSES["SUBNET"].replace("<TYPE>", subnet_type).replace("<AZ_KEY>", az_key)
+        tf_address = TF_ADDRESSES["SUBNET"].replace("<TYPE>", subnet_type).replace("<AZ_KEY>", az_key)
         
         resources_for_import.append({
             "type": "aws_subnet",
@@ -122,7 +121,7 @@ def discover_vpc_resources(vpc_identifier):
         subnet_id = nat['SubnetId']
         az_key = subnet_map.get(subnet_id, {}).get('az_key', 'unknown')
         
-        tf_address_nat = HCL_ADDRESSES["NAT_GATEWAY"].replace("<AZ_KEY>", az_key)
+        tf_address_nat = TF_ADDRESSES["NAT_GATEWAY"].replace("<AZ_KEY>", az_key)
         resources_for_import.append({
             "type": "aws_nat_gateway",
             "aws_id": nat_id,
@@ -136,7 +135,7 @@ def discover_vpc_resources(vpc_identifier):
             if nat_address.get('AllocationId'):
                 eip_alloc_id = nat_address['AllocationId']
 
-                tf_address_eip = HCL_ADDRESSES["EIP"].replace("<AZ_KEY>", az_key)
+                tf_address_eip = TF_ADDRESSES["EIP"].replace("<AZ_KEY>", az_key)
                 resources_for_import.append({
                     "type": "aws_eip",
                     "aws_id": eip_alloc_id,
@@ -166,7 +165,7 @@ def discover_vpc_resources(vpc_identifier):
         if subnet_id_for_type and subnet_id_for_type in subnet_map:
             rt_type = subnet_map[subnet_id_for_type]['type']
             rt_az_key = subnet_map[subnet_id_for_type]['az_key']
-        tf_address_rt = HCL_ADDRESSES["ROUTE_TABLE"].replace("<TYPE>", rt_type).replace("<AZ_KEY>", rt_az_key)
+        tf_address_rt = TF_ADDRESSES["ROUTE_TABLE"].replace("<TYPE>", rt_type).replace("<AZ_KEY>", rt_az_key)
             
         resources_for_import.append({
             "type": "aws_route_table",
@@ -181,7 +180,7 @@ def discover_vpc_resources(vpc_identifier):
             if subnet_id and subnet_id in subnet_map:
                 az_key = subnet_map[subnet_id]['az_key']
                 subnet_type = subnet_map[subnet_id]['type']
-                tf_address_assoc = HCL_ADDRESSES["RT_ASSOC"].replace("<TYPE>", subnet_type).replace("<AZ_KEY>", az_key)
+                tf_address_assoc = TF_ADDRESSES["RT_ASSOC"].replace("<TYPE>", subnet_type).replace("<AZ_KEY>", az_key)
 
                 resources_for_import.append({
                     "type": "aws_route_table_association",
@@ -199,7 +198,7 @@ def discover_vpc_resources(vpc_identifier):
         resources_for_import.append({
             "type": "aws_network_acl",
             "aws_id": nacl_id,
-            "terraform_address": HCL_ADDRESSES["NACL"],
+            "terraform_address": TF_ADDRESSES["NACL"],
             "metadata": {"VpcId": vpc_id}
         })
         
@@ -210,7 +209,7 @@ def discover_vpc_resources(vpc_identifier):
                 if subnet_id and subnet_id in subnet_map:
                     az_key = subnet_map[subnet_id]['az_key']
                     subnet_type = subnet_map[subnet_id]['type']
-                    tf_address_nacl_assoc = HCL_ADDRESSES["NACL_ASSOC"].replace("<RT_TYPE>", subnet_type).replace("<AZ_KEY>", az_key)
+                    tf_address_nacl_assoc = TF_ADDRESSES["NACL_ASSOC"].replace("<RT_TYPE>", subnet_type).replace("<AZ_KEY>", az_key)
 
                     resources_for_import.append({
                         "type": "aws_network_acl_association",
@@ -226,7 +225,7 @@ def discover_vpc_resources(vpc_identifier):
         service_name = ep['ServiceName'].split('.')[-1].replace('-', '_')
         
         
-        tf_address_ep = HCL_ADDRESSES["VPC_ENDPOINT"].replace("<SERVICE_NAME>", service_name)
+        tf_address_ep = TF_ADDRESSES["VPC_ENDPOINT"].replace("<SERVICE_NAME>", service_name)
         
         resources_for_import.append({
             "type": "aws_vpc_endpoint",
