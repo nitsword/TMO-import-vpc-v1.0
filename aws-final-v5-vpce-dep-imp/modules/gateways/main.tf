@@ -1,11 +1,9 @@
-##############################################
-# Gateways Module (AWS Provider v5 Compatible)
-# Import-friendly version (Static Named Blocks)
-##############################################
 
-##############################################
+# Gateways Module (AWS Provider v5 Compatible)
+
+
 # INTERNET GATEWAY
-##############################################
+########################
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = var.vpc_id
@@ -16,10 +14,9 @@ resource "aws_internet_gateway" "igw" {
   )
 }
 
-##############################################
+
 # PUBLIC NAT GATEWAYS (Internet Access)
-# Using explicit blocks for easy import mapping (aws_nat_gateway.public_nat_a)
-##############################################
+#######################################
 
 # --- EIPs for Public NATs ---
 
@@ -80,10 +77,8 @@ resource "aws_nat_gateway" "public_nat_c" {
   )
 }
 
-##############################################
-# PRIVATE NAT GATEWAYS (No Internet Access)
-# Using explicit blocks for easy import mapping (aws_nat_gateway.private_nat_a)
-##############################################
+
+###### PRIVATE NAT GATEWAYS (No Internet Access)
 
 resource "aws_nat_gateway" "private_nat_a" {
   # No allocation_id needed for connectivity_type = "private"

@@ -1,5 +1,5 @@
-####################################################
-# VPC Module Variables (Import & Automation Ready)
+#######################
+# VPC Module Variables 
 ####################################################
 
 # Existing naming remains unchanged

@@ -1,7 +1,3 @@
-##############################################
-# ENVIRONMENT VARIABLES
-##############################################
-
 variable "region" {
   type        = string
   description = "AWS region where this VPC will be deployed"

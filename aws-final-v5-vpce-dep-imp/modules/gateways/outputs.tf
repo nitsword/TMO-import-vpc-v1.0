@@ -1,6 +1,6 @@
-##############################################
-# Gateways Module — Outputs (Import-Friendly)
-##############################################
+### output.tf 
+
+
 
 # Internet Gateway ID
 output "igw_id" {

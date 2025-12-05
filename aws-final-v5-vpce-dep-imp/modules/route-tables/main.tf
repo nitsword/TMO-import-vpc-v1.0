@@ -1,13 +1,13 @@
-##############################################
-# Route Tables Module (Import-Friendly)
-##############################################
 
-# --- Data Lookup ---
+# Route Tables Module 
+######################### 
+
+
 data "aws_vpc" "current" {
   id = var.vpc_id
 }
 
-##########################################
+
 # PUBLIC ROUTE TABLE (ONE ONLY)
 ##########################################
 
@@ -19,7 +19,7 @@ resource "aws_route_table" "public" {
 }
 
 # Create only IGW routes for public RT
-# This map-based approach is acceptable as it iterates over input routes, not hardcoded AZ keys.
+
 resource "aws_route" "public_routes" {
   for_each = {
     for r in var.route_tables.public.routes : "${r.cidr}" => r
@@ -45,7 +45,7 @@ resource "aws_route_table_association" "public_assoc_c" {
   route_table_id = aws_route_table.public.id
 }
 
-##########################################
+
 # PRIVATE ROUTE TABLES (Explicitly defined per AZ)
 ##########################################
 
@@ -111,7 +111,7 @@ resource "aws_route_table_association" "private_assoc_c" {
 }
 
 
-##########################################
+
 # NON-ROUTABLE ROUTE TABLES (Explicitly defined per AZ)
 ##########################################
 

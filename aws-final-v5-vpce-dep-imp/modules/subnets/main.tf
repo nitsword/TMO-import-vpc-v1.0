@@ -1,9 +1,8 @@
-###########################################
 # Subnets module - Public Tier (Fixed Addresses)
 ###########################################
 
 resource "aws_subnet" "public_a" {
-  # Create this subnet only if configuration for key "a" exists in var.subnets.public
+
   count = try(var.subnets.public["a"], null) != null ? 1 : 0
 
   vpc_id            = var.vpc_id
@@ -42,7 +41,7 @@ resource "aws_subnet" "public_c" {
   )
 }
 
-###########################################
+
 # Subnets module - Private Tier (Fixed Addresses)
 ###########################################
 
@@ -85,7 +84,7 @@ resource "aws_subnet" "private_c" {
   )
 }
 
-###########################################
+
 # Subnets module - Nonroutable Tier (Fixed Addresses)
 ###########################################
 

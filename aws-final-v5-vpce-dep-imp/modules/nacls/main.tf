@@ -1,10 +1,10 @@
-##################################
+
 # NACL Module (Fixed For_Each)
 ##################################
 
-# -------------------------------------------
+
 # PUBLIC NACL
-# -------------------------------------------
+# -----------------
 resource "aws_network_acl" "public" {
   vpc_id = var.vpc_id
 
@@ -41,9 +41,9 @@ resource "aws_network_acl" "public" {
   }
 }
 
-# -------------------------------------------
+
 # PUBLIC NACL ASSOCIATIONS (FIXED DYNAMIC KEYS)
-# We iterate over the statically known keys provided by the caller.
+
 # -------------------------------------------
 resource "aws_network_acl_association" "public_assoc" {
   # Use the static set of keys for iteration (known at plan time)
@@ -55,7 +55,7 @@ resource "aws_network_acl_association" "public_assoc" {
 }
 
 
-# -------------------------------------------
+
 # PRIVATE NACL
 # -------------------------------------------
 resource "aws_network_acl" "private" {
@@ -94,26 +94,26 @@ resource "aws_network_acl" "private" {
   }
 }
 
-# -------------------------------------------
+
 # PRIVATE NACL ASSOCIATIONS (FIXED DYNAMIC KEYS)
 # -------------------------------------------
 resource "aws_network_acl_association" "private_assoc" {
-  # Use the static set of keys for iteration (known at plan time)
+
   for_each = var.private_subnet_keys
 
   network_acl_id = aws_network_acl.private.id
-  # Use the known key (each.key) to look up the dynamic ID value (unknown until apply)
+
   subnet_id      = var.private_subnet_ids_map[each.key]
 }
 
-# -------------------------------------------
+
 # NON-ROUTABLE NACL ASSOCIATIONS (FIXED DYNAMIC KEYS)
 # -------------------------------------------
 resource "aws_network_acl_association" "nonroutable_assoc" {
-  # Use the static set of keys for iteration (known at plan time)
+
   for_each = var.nonroutable_subnet_keys
 
-  network_acl_id = aws_network_acl.private.id # Re-using the private NACL ID
-  # Use the known key (each.key) to look up the dynamic ID value (unknown until apply)
+  network_acl_id = aws_network_acl.private.id 
+
   subnet_id      = var.nonroutable_subnet_ids_map[each.key]
 }

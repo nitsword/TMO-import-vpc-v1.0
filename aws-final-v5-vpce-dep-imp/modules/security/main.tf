@@ -1,5 +1,5 @@
-##############################################
-# SECURITY GROUP MODULE (Import-Safe)
+
+# SECURITY GROUP MODULE 
 ##############################################
 
 resource "aws_security_group" "default" {
@@ -13,12 +13,6 @@ resource "aws_security_group" "default" {
   )
 }
 
-##############################################
-# RULE KEY NORMALIZATION (Crucial for Stability)
-# We normalize the input list of rules into a map with stable keys
-# (rule_no + description) to prevent rule resource addresses from changing
-# if the input list order is modified.
-##############################################
 
 locals {
   # Map: "001-ssh-from-internet" => rule_object
@@ -34,12 +28,11 @@ locals {
   }
 }
 
-##############################################
+
 # INBOUND RULES (Dedicated Resources via for_each)
 ##############################################
 
-# NOTE: Using 'for_each' on a map of rules is the best practice for 
-# managing SG rules, as it prevents drift and allows imports.
+
 resource "aws_security_group_rule" "inbound" {
   for_each = local.inbound_rules_map
 
@@ -57,7 +50,7 @@ resource "aws_security_group_rule" "inbound" {
   source_security_group_id = try(each.value.source_security_group_id, null)
 }
 
-##############################################
+
 # OUTBOUND RULES (Dedicated Resources via for_each)
 ##############################################
 

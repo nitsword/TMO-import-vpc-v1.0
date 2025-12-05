@@ -1,6 +1,5 @@
-#############################################
-# Route Tables Outputs (Import-Friendly)
-#############################################
+# Route Tables Outputs
+######################
 
 # Public Route Table (Single Resource)
 output "rt_public_id" {
@@ -9,7 +8,7 @@ output "rt_public_id" {
 }
 
 # Private Route Tables (Map by AZ Key)
-# Explicitly map the fixed AZ keys to the explicitly named resources.
+
 output "rt_private_ids" {
   description = "Private route table IDs keyed by AZ (e.g., a, b, c)"
   value = {

@@ -1,5 +1,5 @@
-#############################################
-# Subnets Module Variables (Import-Ready)
+###########################
+# Subnets Module Variables 
 #############################################
 
 variable "vpc_id" {
@@ -18,15 +18,10 @@ variable "tags" {
   default     = {}
 }
 
-#############################################
+
 # Subnet Definitions for 3 Network Tiers
 #############################################
 
-# NOTE:
-# The module relies on fixed resource addresses (e.g., public_a, private_b).
-# Therefore, map keys MUST be stable ('a', 'b', 'c').
-# Tiers are optional (default to empty map {}) if no subnets are required
-# for that tier.
 
 variable "subnets" {
   description = "Subnet layout definition. All tier maps should use 'a', 'b', 'c' as keys."

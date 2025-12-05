@@ -1,4 +1,4 @@
-##################################
+
 # NACL Module Outputs
 ##################################
 
@@ -17,7 +17,7 @@ output "private_nacl_id" {
 # --- NACL Association IDs ---
 
 # Collects all public subnet associations, keyed by availability zone letter (a, b, c).
-# Uses a 'for' expression to reference the new 'for_each' resource (public_assoc).
+
 output "public_associations" {
   description = "A map of public subnet association IDs, keyed by AZ letter."
   value = {

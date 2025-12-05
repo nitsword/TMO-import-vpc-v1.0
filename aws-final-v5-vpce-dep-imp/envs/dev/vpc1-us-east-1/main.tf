@@ -1,6 +1,6 @@
 terraform {
   # This constraint allows any version 1.14.x, but not 1.15.0 or later.
-  required_version = "~> 1.14.0"
+    required_version = ">= 1.5.0"
 
   required_providers {
     aws = {

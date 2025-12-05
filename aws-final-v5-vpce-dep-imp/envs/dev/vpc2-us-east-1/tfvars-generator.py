@@ -8,14 +8,13 @@ JSON_FILE = "resources_for_import.json"
 OUTPUT_FILE = "dev-us-east-1.tfvars"
 
 def get_cidr_size(cidr):
-    """Converts a CIDR block to the prefix length (smaller number means larger subnet size)."""
     try:
         return ipaddress.ip_network(cidr).prefixlen
     except ValueError:
         return 32 # Use max prefix length if invalid CIDR
 
 def get_tag_value(resource, key):
-    """Helper function to extract tag value from a resource's metadata (looks in nested 'Tags')."""
+    """function to extract tag value from a resources metadata (looks in nested 'Tags')."""
     tags = resource.get('metadata', {}).get('Tags', {})
     if isinstance(tags, list):
         for tag in tags:
@@ -80,7 +79,6 @@ def hcl_format_list(data, indent=0):
 
 
 def hcl_format_map(data, indent=0):
-    """Formats a Python dictionary into a multi-line HCL map/object structure, guaranteeing clean comma separation."""
     if not data:
         return "{}"
     
@@ -158,7 +156,7 @@ def generate_tfvars_from_json():
             sys.exit(1)
 
 
-    # --- 1. Filter Resources ---
+    # Filter Resources ---
     vpc_data = next((r for r in resources if r['type'] == 'aws_vpc'), None)
     subnets = [r for r in resources if r['type'] == 'aws_subnet']
     nat_gateways = [r for r in resources if r['type'] == 'aws_nat_gateway']
@@ -167,7 +165,7 @@ def generate_tfvars_from_json():
         print("ERROR: Could not find 'aws_vpc' resource in the JSON file. Cannot proceed.")
         sys.exit(1)
 
-    # --- 2. Extract Core Metadata and Sort ---
+    # Extract Core Metadata and Sort ---
     vpc_meta = vpc_data['metadata']
     vpc_cidr = vpc_meta.get('CidrBlock', '10.0.0.0/16')
     vpc_name = vpc_meta.get('Name') or get_tag_value(vpc_data, 'Name') or vpc_meta.get('VpcId', 'imported-vpc')
@@ -180,21 +178,21 @@ def generate_tfvars_from_json():
     subnets.sort(key=lambda x: get_cidr_size(x['metadata'].get('CidrBlock', '255.255.255.255/32')))
 
 
-    # --- 3. Construct Complex Variables to Match Target Schema ---
+    #  Construct Complex Variables to Match Target Schema ---
     
-    # 3.1. vpc variable
+    # vpc variable
     vpc_tags_meta = vpc_meta.get('Tags', {})
     vpc_tags_var = {
         "Environment": vpc_tags_meta.get('Environment', 'dev'),
-        "Owner": vpc_tags_meta.get('Owner', 'imported-user'),
+        "Owner": vpc_tags_meta.get('Owner', 'imported-user'), 
         "Project": vpc_tags_meta.get('Project', name_prefix),
     }
     vpc_var = {
-        "cidr": vpc_cidr,
+        "cidr": vpc_cidr, 
         "tags": vpc_tags_var,
     }
 
-    # 3.2. subnets variable (Nested map: { type = { az_key = { cidr, az } } } )
+    # subnets variable (Nested map: { type = { az_key = { cidr, az } } } )
     subnets_var = { "public": {}, "private": {}, "nonroutable": {} }
     
     for subnet in subnets:
@@ -217,7 +215,7 @@ def generate_tfvars_from_json():
     subnets_var = {k: v for k, v in subnets_var.items() if v}
 
 
-    # 3.3. nat variable
+    # nat variable
     nat_var = {
         "type": "per_az" if len(nat_gateways) > 1 else "single",
     }
@@ -225,7 +223,7 @@ def generate_tfvars_from_json():
         nat_var['type'] = "none"
 
 
-    # 3.4. route_tables
+    # route_tables
     private_keys = sorted(subnets_var.get('private', {}).keys())
     nonroutable_keys = sorted(subnets_var.get('nonroutable', {}).keys())
     
@@ -246,7 +244,7 @@ def generate_tfvars_from_json():
         }
     }
 
-    # 3.5. dhcp_enabled and dhcp
+    # dhcp_enabled and dhcp
     dhcp_enabled = True
 
     dhcp_var = {
@@ -257,7 +255,7 @@ def generate_tfvars_from_json():
         "netbios_node_type": 2
     }
     
-    # 3.6. sg_rules and nacl_rules
+    # sg_rules and nacl_rules
     sg_rules_var = {
         "inbound": [
             {"rule_no": 100, "description": "Allow HTTPS", "protocol": "tcp", "from": 443, "to": 443, "cidr": "0.0.0.0/0"},
@@ -279,14 +277,14 @@ def generate_tfvars_from_json():
         ]
     }
     
-    # 3.7. vpc_endpoints
+    #  vpc_endpoints
     vpc_endpoints_var = {
         "ssm": True,
         "ec2messages": True,
         "s3": True,
     }
 
-    # 3.8. tags (Global tags, derived from user's example)
+    # tags (Global tags, derived from user's example)
     global_tags_var = {
         "Environment": "dev",
         "Application": "vpc1",
@@ -294,7 +292,7 @@ def generate_tfvars_from_json():
     }
 
 
-    # --- 4. Generate HCL Output ---
+    # Generate HCL Output ---
     hcl_content = [
         f'# Generated from {JSON_FILE} by {os.path.basename(__file__)}',
         '# This file is structured to match the module schema derived from the provided tfvars example.',
@@ -355,7 +353,7 @@ def generate_tfvars_from_json():
         f'tags = {hcl_format_map(global_tags_var, 0)}',
     ]
 
-    # 5. Write the file
+    # Write the file
     try:
         with open(OUTPUT_FILE, 'w') as f:
             f.write('\n'.join(hcl_content))

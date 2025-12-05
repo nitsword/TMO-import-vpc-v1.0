@@ -1,6 +1,4 @@
-#############################################
-# Route Tables Module Variables
-#############################################
+
 
 variable "vpc_id" {
   type        = string
