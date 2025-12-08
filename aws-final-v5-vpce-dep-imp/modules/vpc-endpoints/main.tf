@@ -61,7 +61,6 @@ resource "aws_vpc_endpoint" "interface" {
 ###############################################
 
 resource "aws_vpc_endpoint" "gateway" {
-  # Uses local.gateway_services to conditionally create the S3 endpoint
   for_each = local.gateway_services
 
   vpc_id              = var.vpc_id
@@ -73,7 +72,6 @@ resource "aws_vpc_endpoint" "gateway" {
 
   tags = merge(
     {
-      # Use the key as part of the name to maintain a dynamic prefix
       Name = "${var.name_prefix}-vpce-${each.key}"
       Type = "gateway"
     },
