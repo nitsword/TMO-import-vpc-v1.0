@@ -1,11 +1,9 @@
 terraform {
-  # This constraint allows any version 1.14.x, but not 1.15.0 or later.
   required_version = ">= 1.5.0"
 
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      # This constraint allows any version 5.x.x, but not 6.0.0 or later.
       version = "~> 5.0"
     }
   }
@@ -179,7 +177,7 @@ module "security" {
 
 
 ##############################################
-# VPC ENDPOINTS (FIXED)
+# VPC ENDPOINTS
 ##############################################
 
 locals {
@@ -187,14 +185,14 @@ locals {
 
   # FIX: Concatenate all Private and Nonroutable RT IDs from the new map outputs.
   gateway_route_table_ids = concat(
-    values(module.rts.rt_private_ids),    # Retrieves all RT IDs for Private AZs (A, B, C)
-    values(module.rts.rt_nonroutable_ids) # Retrieves all RT IDs for Nonroutable AZs (A, B, C)
+    values(module.rts.rt_private_ids),
+    values(module.rts.rt_nonroutable_ids)
   )
   endpoint_security_group_ids = [module.security.security_group_id]
 }
 
 module "vpc_endpoints" {
-  source = "../../../modules/vpc-endpoints" # or ./modules/endpoints if that's your path
+  source = "../../../modules/vpc-endpoints"
 
   vpc_id                  = module.vpc.vpc_id
   name_prefix             = var.name_prefix
