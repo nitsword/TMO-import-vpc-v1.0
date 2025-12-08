@@ -9,14 +9,13 @@ output "dhcp_options_id" {
 
 
 output "dhcp_association_status" {
-  description = "Whether the DHCP options association resource was created in this run."
+  description = "DHCP options association"
   # The map will have 1 element if created, 0 otherwise.
   value       = length(aws_vpc_dhcp_options_association.assoc) > 0
 }
 
-# Returns the association details or null if the association was not created.
 output "dhcp_association_details" {
-  description = "Details of DHCP association (null if not created)."
+  description = "Details of DHCP association."
   value = try(
     {
       vpc_id          = aws_vpc_dhcp_options_association.assoc["assoc"].vpc_id
