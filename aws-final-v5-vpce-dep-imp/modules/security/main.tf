@@ -29,7 +29,7 @@ locals {
 }
 
 
-# INBOUND RULES (Dedicated Resources via for_each)
+# INBOUND RULES 
 ##############################################
 
 
@@ -51,11 +51,9 @@ resource "aws_security_group_rule" "inbound" {
 }
 
 
-# OUTBOUND RULES (Dedicated Resources via for_each)
+# OUTBOUND RULES 
 ##############################################
 
-# NOTE: Using 'for_each' on a map of rules is the best practice for 
-# managing SG rules, as it prevents drift and allows imports.
 resource "aws_security_group_rule" "outbound" {
   for_each = local.outbound_rules_map
 
@@ -67,7 +65,6 @@ resource "aws_security_group_rule" "outbound" {
   to_port           = each.value.to
   description       = each.value.description
 
-  # Conditional arguments: Only one of these can be set.
   cidr_blocks              = try(each.value.cidr, null) != null ? [each.value.cidr] : null
   self                     = try(each.value.self, false)
   source_security_group_id = try(each.value.source_security_group_id, null)
