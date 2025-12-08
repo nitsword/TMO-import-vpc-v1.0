@@ -1,5 +1,5 @@
 ###############################################
-# VPC ENDPOINTS MODULE (Import-Safe Version)
+# VPC ENDPOINTS MODULE
 ###############################################
 
 data "aws_region" "current" {}
@@ -9,12 +9,9 @@ data "aws_region" "current" {}
 ###############################################
 
 locals {
-  # Map user's single 'ssm = true' flag to the required SSM interface endpoints.
   required_services = merge(
     var.enabled.s3 ? { s3 = "s3" } : {},
     var.enabled.ssm ? {
-      # The 'ssm-messages' service name is often invalid in many regions, 
-      # and 'ssm' + 'ec2messages' are sufficient for full SSM functionality.
       ssm         = "ssm"
       ec2messages = "ec2messages"
       # REMOVED: ssm_messages = "ssm-messages"
@@ -39,11 +36,9 @@ locals {
 ###############################################
 
 resource "aws_vpc_endpoint" "interface" {
-  # Uses local.interface_services to conditionally create endpoints
   for_each = local.interface_services
 
   vpc_id              = var.vpc_id
-  # Service name convention: 'com.amazonaws.<region>.<service>'
   service_name        = "com.amazonaws.${data.aws_region.current.name}.${each.value}"
   vpc_endpoint_type   = "Interface"
 
