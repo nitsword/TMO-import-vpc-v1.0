@@ -1,5 +1,5 @@
 ###############################################
-# OUTPUTS FOR VPC ENDPOINTS (IMPORT-FRIENDLY)
+# OUTPUTS FOR VPC ENDPOINTS\
 ###############################################
 
 # Map of interface VPC endpoints (SSM, EC2 Messages, SSM Messages)
