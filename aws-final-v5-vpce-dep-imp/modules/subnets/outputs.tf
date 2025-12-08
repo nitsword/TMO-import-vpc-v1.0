@@ -26,8 +26,7 @@ locals {
   all_private_subnets     = [for s in local.raw_private_subnets : s if s != null]
   all_nonroutable_subnets = [for s in local.raw_nonroutable_subnets : s if s != null]
 
-  #  Define the standard keys (based on their position in the array)
-  # This map must contain the index/key used by the consuming modules (e.g., "a", "b", "c")
+
   subnet_keys = ["a", "b", "c"]
 
   
@@ -62,13 +61,13 @@ output "nonroutable_subnet_ids_map" {
   value       = { for k, s in local.nonroutable_subnets_map : k => s.id }
 }
 
-# Output the consolidated list of all subnet objects (for VPC peering/routing)
+
 output "all_subnets" {
   description = "Consolidated list of all aws_subnet objects across all tiers."
   value       = flatten([local.all_public_subnets, local.all_private_subnets, local.all_nonroutable_subnets])
 }
 
-# Output the consolidated map of all subnet IDs
+
 output "all_subnet_ids_map" {
   description = "Consolidated map containing the IDs of all subnets by tier (keyed by a, b, c)."
   value = {
@@ -78,7 +77,7 @@ output "all_subnet_ids_map" {
   }
 }
 
-# Output the consolidated lists of IDs (for bulk association)
+
 output "public_subnet_ids" {
   description = "A simple list of IDs for all provisioned public subnets."
   value       = [for s in local.all_public_subnets : s.id]
