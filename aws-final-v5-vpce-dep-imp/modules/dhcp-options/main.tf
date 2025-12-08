@@ -3,9 +3,6 @@
 
 locals {
   dhcp_options_map = var.dhcp_enabled ? { "this" : true } : {}
-  
-  # This map will contain one key ("assoc") if the association should exist.
-  # Creation is skipped if import_mode is true, or if dhcp_enabled is false.
   association_map = (var.dhcp_enabled && !var.import_mode) ? { "assoc" : true } : {}
 }
 
@@ -28,7 +25,7 @@ resource "aws_vpc_dhcp_options" "this" {
 }
 
 ##############################################
-# DHCP Options Association (Import-Friendly)
+# DHCP Options Association 
 ##############################################
 
 resource "aws_vpc_dhcp_options_association" "assoc" {
