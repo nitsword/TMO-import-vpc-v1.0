@@ -20,17 +20,17 @@ variable "nonroutable_subnet_ids_map" {
 
 # --- NEW STATIC KEY VARIABLES ---
 variable "public_subnet_keys" {
-  description = "A set of static keys (e.g., [\"a\", \"b\"]) corresponding to the public_subnet_ids_map. Required to resolve dependency issues with for_each."
+  description = "A set of static keys (e.g., [\"a\", \"b\"]) corresponding to the public_subnet_ids_map"
   type        = set(string)
 }
 
 variable "private_subnet_keys" {
-  description = "A set of static keys (e.g., [\"a\", \"b\"]) corresponding to the private_subnet_ids_map. Required to resolve dependency issues with for_each."
+  description = "A set of static keys (e.g., [\"a\", \"b\"]) corresponding to the private_subnet_ids_map"
   type        = set(string)
 }
 
 variable "nonroutable_subnet_keys" {
-  description = "A set of static keys (e.g., [\"a\", \"b\"]) corresponding to the nonroutable_subnet_ids_map. Required to resolve dependency issues with for_each."
+  description = "A set of static keys (e.g., [\"a\", \"b\"]) corresponding to the nonroutable_subnet_ids_map"
   type        = set(string)
 }
 # --------------------------------
