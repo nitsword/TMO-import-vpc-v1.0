@@ -26,7 +26,6 @@ variable "vpc" {
 
 #################################################
 # SUBNETS (public / private / nonroutable)
-# Each must be a map with stable keys (a, b, c)
 #################################################
 
 variable "subnets" {
@@ -193,9 +192,9 @@ variable "tags" {
 }
 
 variable "availability_zone_keys" {
-  description = "A static, known set of keys (e.g., 'a', 'b', 'c') corresponding to the subnets to be deployed. This is critical for for_each iteration."
+  description = "A static, set of keys "
   type        = set(string)
   # --- CHANGE IS HERE ---
-  default     = ["a", "b", "c"] # Now deploying to three AZs
+  default     = ["a", "b", "c"]
   # ----------------------
 }
