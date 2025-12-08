@@ -1,5 +1,5 @@
 
-# NACL Module (Fixed For_Each)
+# NACL Module
 ##################################
 
 
@@ -8,13 +8,12 @@
 resource "aws_network_acl" "public" {
   vpc_id = var.vpc_id
 
-  # Tags are supported on the main NACL resource
   tags = merge(
     { Name = "${var.name_prefix}-nacl-public" },
     var.tags
   )
 
-  # Ingress rules are dynamically defined based on input variable
+  # Ingress rules
   dynamic "ingress" {
     for_each = try(var.nacl_rules.public_ingress, [])
     content {
@@ -27,7 +26,7 @@ resource "aws_network_acl" "public" {
     }
   }
 
-  # Egress rules are dynamically defined based on input variable
+  # Egress rules
   dynamic "egress" {
     for_each = try(var.nacl_rules.public_egress, [])
     content {
@@ -42,15 +41,13 @@ resource "aws_network_acl" "public" {
 }
 
 
-# PUBLIC NACL ASSOCIATIONS (FIXED DYNAMIC KEYS)
+# PUBLIC NACL ASSOCIATIONS
 
 # -------------------------------------------
 resource "aws_network_acl_association" "public_assoc" {
-  # Use the static set of keys for iteration (known at plan time)
   for_each = var.public_subnet_keys
 
   network_acl_id = aws_network_acl.public.id
-  # Use the known key (each.key) to look up the dynamic ID value (unknown until apply)
   subnet_id      = var.public_subnet_ids_map[each.key]
 }
 
@@ -67,7 +64,7 @@ resource "aws_network_acl" "private" {
     var.tags
   )
 
-  # Ingress rules are dynamically defined based on input variable
+  # Ingress rules
   dynamic "ingress" {
     for_each = try(var.nacl_rules.private_ingress, [])
     content {
@@ -80,7 +77,7 @@ resource "aws_network_acl" "private" {
     }
   }
 
-  # Egress rules are dynamically defined based on input variable
+  # Egress rules 
   dynamic "egress" {
     for_each = try(var.nacl_rules.private_egress, [])
     content {
@@ -95,7 +92,7 @@ resource "aws_network_acl" "private" {
 }
 
 
-# PRIVATE NACL ASSOCIATIONS (FIXED DYNAMIC KEYS)
+# PRIVATE NACL ASSOCIATIONS
 # -------------------------------------------
 resource "aws_network_acl_association" "private_assoc" {
 
@@ -107,7 +104,7 @@ resource "aws_network_acl_association" "private_assoc" {
 }
 
 
-# NON-ROUTABLE NACL ASSOCIATIONS (FIXED DYNAMIC KEYS)
+# NON-ROUTABLE NACL ASSOCIATIONS
 # -------------------------------------------
 resource "aws_network_acl_association" "nonroutable_assoc" {
 
