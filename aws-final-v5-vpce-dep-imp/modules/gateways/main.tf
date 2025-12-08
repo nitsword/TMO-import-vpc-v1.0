@@ -1,5 +1,5 @@
 
-# Gateways Module (AWS Provider v5 Compatible)
+# Gateways Module
 
 
 # INTERNET GATEWAY
@@ -48,7 +48,6 @@ resource "aws_eip" "public_nat_c" {
 
 resource "aws_nat_gateway" "public_nat_a" {
   allocation_id = aws_eip.public_nat_a.id
-  # Subnet ID for AZ 'a' is looked up from the map: var.public_subnet_ids_map
   subnet_id = var.public_subnet_ids_map["a"]
 
   tags = merge(
@@ -81,7 +80,6 @@ resource "aws_nat_gateway" "public_nat_c" {
 ###### PRIVATE NAT GATEWAYS (No Internet Access)
 
 resource "aws_nat_gateway" "private_nat_a" {
-  # No allocation_id needed for connectivity_type = "private"
   subnet_id = var.nonroutable_subnet_ids_map["a"]
 
   connectivity_type = "private"
