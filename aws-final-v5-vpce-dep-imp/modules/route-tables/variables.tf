@@ -11,32 +11,30 @@ variable "name_prefix" {
 }
 
 #############################################
-# Static Key Map (Required for Import Stability)
+# Static Key Map
 #############################################
-# This is kept as a potential input for future-proofing,
-# but it is no longer used for resource iteration.
 variable "az_keys" {
   type        = list(string)
   description = "Ordered list of AZ keys (example: [\"a\", \"b\", \"c\"])"
 }
 
 #############################################
-# Subnet ID Maps (Outputs from Subnets Module)
+# Subnet ID Maps
 #############################################
 
 variable "public_subnet_ids_map" {
   type        = map(string)
-  description = "Map of subnet IDs for public subnets keyed by AZ"
+  description = "Map of subnet IDs for public subnets"
 }
 
 variable "private_subnet_ids_map" {
   type        = map(string)
-  description = "Map of subnet IDs for private subnets keyed by AZ"
+  description = "Map of subnet IDs for private subnets"
 }
 
 variable "nonroutable_subnet_ids_map" {
   type        = map(string)
-  description = "Map of subnet IDs for non-routable subnets keyed by AZ"
+  description = "Map of subnet IDs for non-routable subnets"
 }
 
 #############################################
@@ -59,10 +57,8 @@ variable "private_nat_ids_map" {
 }
 
 #############################################
-# Route Definitions (Simplified)
+# Route Definitions 
 #############################################
-# Only public routes remain configurable as private/non-routable tables
-# now hardcode the 0.0.0.0/0 route in main.tf for simplicity.
 variable "route_tables" {
   description = "Routing configuration for the public route table"
   type = object({
@@ -83,9 +79,6 @@ variable "route_tables" {
   }
 }
 
-#############################################
-# Behavior Switch
-#############################################
 
 variable "skip_existing_routes" {
   type        = bool
