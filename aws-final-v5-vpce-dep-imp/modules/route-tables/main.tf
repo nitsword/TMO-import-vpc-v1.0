@@ -8,7 +8,7 @@ data "aws_vpc" "current" {
 }
 
 
-# PUBLIC ROUTE TABLE (ONE ONLY)
+# PUBLIC ROUTE TABLE
 ##########################################
 
 resource "aws_route_table" "public" {
@@ -31,7 +31,7 @@ resource "aws_route" "public_routes" {
   gateway_id             = var.igw_id
 }
 
-# --- PUBLIC ROUTE TABLE ASSOCIATIONS (Explicitly defined per AZ) ---
+# --- PUBLIC ROUTE TABLE ASSOCIATIONS
 resource "aws_route_table_association" "public_assoc_a" {
   subnet_id      = var.public_subnet_ids_map["a"]
   route_table_id = aws_route_table.public.id
@@ -46,7 +46,7 @@ resource "aws_route_table_association" "public_assoc_c" {
 }
 
 
-# PRIVATE ROUTE TABLES (Explicitly defined per AZ)
+# PRIVATE ROUTE TABLES 
 ##########################################
 
 # --- Private Route Tables ---
@@ -73,7 +73,7 @@ resource "aws_route_table" "private_c" {
 # --- Private Routes (Pointing to Public NAT GWs) ---
 resource "aws_route" "private_routes_a" {
   route_table_id         = aws_route_table.private_a.id
-  destination_cidr_block = "0.0.0.0/0" # Assumes a default route to NAT GW
+  destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = var.public_nat_ids_map["a"]
   timeouts {
     create = "5m"
@@ -112,7 +112,7 @@ resource "aws_route_table_association" "private_assoc_c" {
 
 
 
-# NON-ROUTABLE ROUTE TABLES (Explicitly defined per AZ)
+# NON-ROUTABLE ROUTE TABLES 
 ##########################################
 
 # --- Non-Routable Route Tables ---
@@ -136,10 +136,10 @@ resource "aws_route_table" "nonroutable_c" {
 }
 
 
-# --- Non-Routable Routes (Pointing to Private NAT GWs) ---
+# --- Non-Routable Routes 
 resource "aws_route" "nonroutable_routes_a" {
   route_table_id         = aws_route_table.nonroutable_a.id
-  destination_cidr_block = "0.0.0.0/0" # Assumes a default route to NAT GW
+  destination_cidr_block = "0.0.0.0/0" 
   nat_gateway_id         = var.private_nat_ids_map["a"]
   timeouts {
     create = "5m"
