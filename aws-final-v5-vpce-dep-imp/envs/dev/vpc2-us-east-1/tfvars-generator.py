@@ -112,8 +112,6 @@ def generate_tfvars_from_json():
             resources = json.load(f)
     except Exception as e:
         print(f"ERROR reading or decoding JSON file: {e}")
-        # using static data if the JSON file is missing or invalid for demonstration
-        # Remark- static data for testing- need to variablized
         if not os.path.exists(JSON_FILE):
              print("Using static data as JSON file was not found.")
              resources = [
@@ -324,4 +322,5 @@ def generate_tfvars_from_json():
         print(f"ERROR writing file: {e}")
 
 if __name__ == "__main__":
+
     generate_tfvars_from_json()
