@@ -8,9 +8,9 @@ output "igw_id" {
   value       = aws_internet_gateway.igw.id
 }
 
-# Map of AZ key → Public NAT Gateway IDs (for private subnets)
+
 output "public_nat_map" {
-  description = "Map of AZ key → Public NAT Gateway IDs (used by private subnets)"
+  description = "Maping Public NAT Gateway IDs"
   value = {
     "a" = aws_nat_gateway.public_nat_a.id
     "b" = aws_nat_gateway.public_nat_b.id
@@ -18,9 +18,8 @@ output "public_nat_map" {
   }
 }
 
-# Map of AZ key → Private NAT Gateway IDs (for nonroutable subnets)
 output "private_nat_map" {
-  description = "Map of AZ key → Private NAT Gateway IDs (used by nonroutable subnets)"
+  description = "Map Private NAT Gateway IDs"
   value = {
     "a" = aws_nat_gateway.private_nat_a.id
     "b" = aws_nat_gateway.private_nat_b.id
@@ -28,9 +27,8 @@ output "private_nat_map" {
   }
 }
 
-# Map of AZ key → Public NAT Gateway EIP IDs
 output "public_nat_eip_map" {
-  description = "Map of AZ key → Public NAT Gateway EIP Allocation IDs."
+  description = "Map Public NAT Gateway EIP Allocation IDs."
   value = {
     "a" = aws_eip.public_nat_a.id
     "b" = aws_eip.public_nat_b.id
