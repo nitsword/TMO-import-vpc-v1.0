@@ -39,10 +39,7 @@ variable "enable_dns_hostnames" {
 # Import Mode Support
 ####################################################
 variable "existing_vpc_id" {
-  description = <<-EOF
-(optional) If provided, Terraform will assume the VPC is already created 
-and will only import/manage it instead of trying to recreate it.
-EOF
+  description = "check th existing vpc"
   type    = string
   default = ""
 }
