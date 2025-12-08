@@ -1,16 +1,16 @@
 # Route Tables Outputs
 ######################
 
-# Public Route Table (Single Resource)
+# Public Route Table
 output "rt_public_id" {
   description = "ID of public route table"
   value       = aws_route_table.public.id
 }
 
-# Private Route Tables (Map by AZ Key)
+# Private Route Tables
 
 output "rt_private_ids" {
-  description = "Private route table IDs keyed by AZ (e.g., a, b, c)"
+  description = "Private route table IDs"
   value = {
     "a" = aws_route_table.private_a.id
     "b" = aws_route_table.private_b.id
@@ -18,8 +18,7 @@ output "rt_private_ids" {
   }
 }
 
-# Non-routing route tables (Map by AZ Key)
-# Explicitly map the fixed AZ keys to the explicitly named resources.
+# Non-routing route tables
 output "rt_nonroutable_ids" {
   description = "Non-routable route table IDs keyed by AZ"
   value = {
@@ -30,7 +29,7 @@ output "rt_nonroutable_ids" {
 }
 
 #############################################
-# Extended Outputs (Optional but helpful)
+# Extended Outputs
 #############################################
 
 # Expose full object maps for modules needing metadata
